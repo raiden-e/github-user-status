@@ -1,0 +1,47 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Update Daily
+
+on:
+  schedule:
+    - cron: 0 2 * * *
+
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          weekday=$(date +%u)
+          if [ $weekday = 1 ]
+          then
+              message="Monday"
+          elif [ $weekday = 2 ]
+          then
+              message="Tuesday"
+          elif [ $weekday = 3 ]
+          then
+              message="Wednesday"
+          elif [ $weekday = 4 ]
+          then
+              message="Thursday"
+          elif [ $weekday = 5 ]
+          then
+              message="Friday"
+          elif [ $weekday = 6 ]
+          then
+              message="Saturday"
+          elif [ $weekday = 7 ]
+          then
+              message="Sunday"
+          fi
+          echo $weekday
+          echo $message
+          npx github-user-status -t ${{secrets.TOKEN}} -m "It's $message" -e 🎯
